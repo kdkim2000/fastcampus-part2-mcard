@@ -1,0 +1,68 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # main 브랜치에 push될 때 실행
+  workflow_dispatch:  # 수동 실행 가능
+
+# GitHub Pages 배포 권한 설정
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 동시 실행 방지
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout 코드
+        uses: actions/checkout@v4
+
+      - name: 📦 Node.js 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+
+      - name: 🔧 의존성 설치
+        run: yarn install --frozen-lockfile
+
+      - name: 🔐 환경 변수 설정
+        run: |
+          echo "REACT_APP_API_KEY=${{ secrets.REACT_APP_API_KEY }}" >> .env.production
+          echo "REACT_APP_AUTH_DOMAIN=${{ secrets.REACT_APP_AUTH_DOMAIN }}" >> .env.production
+          echo "REACT_APP_PROJECT_ID=${{ secrets.REACT_APP_PROJECT_ID }}" >> .env.production
+          echo "REACT_APP_STORAGE_BUCKET=${{ secrets.REACT_APP_STORAGE_BUCKET }}" >> .env.production
+          echo "REACT_APP_MESSAGEING_SENDER_ID=${{ secrets.REACT_APP_MESSAGEING_SENDER_ID }}" >> .env.production
+          echo "REACT_APP_APP_ID=${{ secrets.REACT_APP_APP_ID }}" >> .env.production
+          echo "REACT_APP_MEASUREMENT_ID=${{ secrets.REACT_APP_MEASUREMENT_ID }}" >> .env.production
+
+      - name: 🏗️ 프로젝트 빌드
+        run: yarn build
+        env:
+          CI: false  # 경고를 오류로 처리하지 않음
+
+      - name: 📤 빌드 결과물 업로드
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: 🚀 GitHub Pages 배포
+        id: deployment
+        uses: actions/deploy-pages@v4

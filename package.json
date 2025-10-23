@@ -2,6 +2,7 @@
   "name": "part2_mcard",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://kdkim2000.github.io/fastcampus-part2-mcard",
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -36,7 +37,9 @@
     "test": "craco test",
     "eject": "craco eject",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
-    "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\""
+    "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build"
   },
   "browserslist": {
     "production": [
@@ -69,6 +72,7 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.33.2",
+    "gh-pages": "^6.3.0",
     "prettier": "^3.0.2",
     "webpack-bundle-analyzer": "^4.9.1"
   }

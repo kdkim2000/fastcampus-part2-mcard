@@ -34,3 +34,10 @@ yarn-error.log*
 
 # env
 .env
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*~
