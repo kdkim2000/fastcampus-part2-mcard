@@ -7,9 +7,11 @@ import { colors } from '@styles/colorPalette'
 
 import { Option } from '@models/apply'
 
+// ✅ placeholder 속성을 SelectProps 인터페이스에 추가
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string
   options: Option[]
+  placeholder?: string // 👈 이 줄 추가
 }
 
 const BaseSelect = styled.select`
